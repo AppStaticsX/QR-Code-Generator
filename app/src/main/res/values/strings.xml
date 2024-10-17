@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">QuickQR</string>
+    <string name="upper">UPPERCASE TEXT</string>
+    <string name="lower">LOWERCASE TEXT</string>
+    <string name="enter_content">Enter Content</string>
+    <string name="enter_name_optional">Enter Name</string>
+    <string name="enter_your_text">Enter Your Text</string>
+    <string name="generate_qrcode">GENERATE QRCODE</string>
+    <string name="contentDes">TODO</string>
+    <string name="scan">SCAN</string>
+    <string name="share">SHARE</string>
+    <string name="save">SAVE</string>
+    <string name="letter_count">0/2953</string>
+</resources>
