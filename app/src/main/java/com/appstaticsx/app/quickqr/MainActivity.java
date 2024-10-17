@@ -164,16 +164,7 @@ public class MainActivity extends AppCompatActivity {
                 scanAnim.setVisibility(View.GONE);
                 BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
                 Bitmap bitmap = barcodeEncoder.encodeBitmap(text, BarcodeFormat.QR_CODE, QR_SIZE, QR_SIZE);
-                Bitmap coloredBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
-                Canvas canvas = new Canvas(coloredBitmap);
-                Paint paint = new Paint();
-
-                // Set the color you want for the QR code
-                paint.setColor(Color.BLUE); // Change this to your desired color
-                canvas.drawRect(0, 0, coloredBitmap.getWidth(), coloredBitmap.getHeight(), paint);
-                paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
-                canvas.drawBitmap(bitmap, 0, 0, paint);
-
+                
                 qrImage.setVisibility(View.VISIBLE);
                 qrImage.setImageBitmap(bitmap);
             } catch (WriterException e) {
