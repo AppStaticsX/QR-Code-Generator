@@ -10,6 +10,8 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.Settings;
 import android.view.View;
+import android.widget.Button;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -45,25 +47,30 @@ public class PermissionManager {
                 .setNegativeButton("Deny", null);
 
         AlertDialog dialog = builder.create();
-        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface dialogInterface) {
-                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
-                    Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
-                    intent.setData(Uri.parse("package:" + activity.getPackageName()));
-                    activity.startActivityForResult(intent, REQUEST_MANAGE_STORAGE_PERMISSION);
-                    dialog.dismiss();
-                });
+        dialog.setOnShowListener(dialogInterface -> {
+            Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+            Button negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
 
-                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(v -> {
-                    showPermissionDeniedDialog();
-                    dialog.dismiss();
-                });
-            }
+            // Set the colors for the buttons
+            positiveButton.setTextColor(Color.BLACK);
+            negativeButton.setTextColor(Color.RED);
+
+            positiveButton.setOnClickListener(v -> {
+                Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+                intent.setData(Uri.parse("package:" + activity.getPackageName()));
+                activity.startActivityForResult(intent, REQUEST_MANAGE_STORAGE_PERMISSION);
+                dialog.dismiss();
+            });
+
+            negativeButton.setOnClickListener(v -> {
+                showPermissionDeniedDialog();
+                dialog.dismiss();
+            });
         });
 
         dialog.show();
     }
+
 
     private void showPermissionDeniedDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity, R.style.CustomAlertDialog);
@@ -74,16 +81,24 @@ public class PermissionManager {
 
         AlertDialog dialog = builder.create();
         dialog.setOnShowListener(dialogInterface -> {
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+
+            Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+            Button negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+
+            positiveButton.setTextColor(Color.BLACK);
+            negativeButton.setTextColor(Color.RED);
+
+            positiveButton.setOnClickListener(v -> {
                 checkStoragePermission();
                 dialog.dismiss();
             });
 
-            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(v -> activity.finish());
+            negativeButton.setOnClickListener(v -> activity.finish());
         });
 
         dialog.show();
     }
+
 
     public void onRequestPermissionsResult(int requestCode, int[] grantResults, Runnable onSuccess) {
         if (requestCode == REQUEST_STORAGE_PERMISSION) {
