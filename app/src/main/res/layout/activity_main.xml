@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -13,6 +13,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/top_app_name"
         android:background="@drawable/header_background"
         android:gravity="center"
         android:orientation="horizontal">
@@ -35,7 +36,9 @@
 
     <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:id="@+id/textCustombtn"
+        android:layout_below="@+id/top_app_name">
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -53,7 +56,7 @@
                 android:layout_width="0dp"
                 android:tooltipText="@string/upper"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="1.5"
                 android:layout_marginHorizontal="1dp"
                 android:contentDescription="@string/contentDes"
                 android:padding="0dp"
@@ -73,7 +76,7 @@
                 android:id="@+id/lowercase"
                 android:layout_width="0dp"
                 android:tooltipText="@string/lower"
-                android:layout_weight="1"
+                android:layout_weight="1.5"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="1dp"
                 android:contentDescription="@string/contentDes"
@@ -82,20 +85,39 @@
                 android:theme="@style/Base.Widget.AppCompat.Button.Borderless"
                 app:tint="@color/black"
                 tools:ignore="TouchTargetSizeCheck" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:text="|"
+                android:textStyle="bold"/>
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/clearAllText"
+                android:layout_width="0dp"
+                android:tooltipText="CLEAR TEXT"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="1dp"
+                android:contentDescription="@string/contentDes"
+                android:padding="0dp"
+                android:src="@drawable/keyboard_backspace_30dp"
+                android:theme="@style/Base.Widget.AppCompat.Button.Borderless"
+                app:tint="@color/black"
+                tools:ignore="TouchTargetSizeCheck" />
         </LinearLayout>
     </RelativeLayout>
 
-    <com.google.android.material.divider.MaterialDivider
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:dividerThickness="2dp"
-        app:dividerColor="@color/my_light_primary"
-        android:layout_marginHorizontal="30dp" />
+
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/textCustombtn"
+        android:layout_above="@+id/bottomControls"
         android:layout_marginTop="2dp"
+        android:scrollbars="none"
         android:fillViewport="true">
 
         <LinearLayout
@@ -109,19 +131,18 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="30dp"
                 android:layout_marginTop="0dp"
-                android:background="@android:color/transparent"
-                app:endIconMode="clear_text"
-                app:endIconTint="@color/black"
-                app:startIconDrawable="@drawable/baseline_text_fields_24"
-                app:startIconTint="@color/my_light_primary">
+                android:background="@android:color/transparent">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/textData"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:scrollbarFadeDuration="5000"
+                    android:scrollbars="vertical"
+                    android:gravity="top|start"
                     android:hint="@string/enter_your_text"
-                    android:maxLines="10"
-                    android:minLines="3"
+                    android:maxLines="20"
+                    android:minLines="10"
                     tools:ignore="VisualLintTextFieldSize" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -146,8 +167,8 @@
                 android:layout_marginTop="15dp"
                 android:background="@android:color/transparent"
                 app:endIconMode="clear_text"
-                app:endIconTint="@color/black"
-                app:startIconDrawable="@drawable/baseline_drive_file_rename_outline_24"
+                app:endIconDrawable="@drawable/close_circle_svgrepo_com"
+                app:startIconDrawable="@drawable/edit_2_svgrepo_com"
                 app:startIconTint="@color/my_light_primary">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -166,6 +187,7 @@
                 android:layout_height="60dp"
                 android:layout_marginHorizontal="30dp"
                 android:layout_marginTop="25dp"
+                android:layout_marginBottom="15dp"
                 android:text="@string/generate_qrcode"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -176,7 +198,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="30dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginVertical="15dp"
                 app:cardElevation="1dp"
                 app:cardBackgroundColor="@color/white">
 
@@ -188,102 +210,117 @@
                     android:contentDescription="@string/contentDes"
                     android:visibility="gone" />
 
-                <ImageView
+                <TextView
                     android:id="@+id/qr_code_anim1"
-                    android:layout_width="300dp"
-                    android:layout_height="300dp"
+                    android:layout_width="200dp"
+                    android:layout_height="150dp"
+                    android:gravity="center"
                     android:layout_gravity="center"
-                    android:contentDescription="@string/contentDes"
-                    android:src="@drawable/scan_barcode_svgrepo_com"
+                    android:lineHeight="20dp"
+                    android:text="@string/qr_tolltip"
                     android:visibility="visible" />
             </com.google.android.material.card.MaterialCardView>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="25dp"
-                android:layout_marginVertical="8dp"
-                android:elevation="50dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_margin="5dp"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:id="@+id/share_qr"
-                        android:layout_width="0dp"
-                        android:gravity="center"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:layout_marginVertical="5dp"
-                            android:contentDescription="@string/contentDes"
-                            android:src="@drawable/share_svgrepo_com" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/share"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/scan_qr"
-                        android:layout_width="0dp"
-                        android:gravity="center"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:layout_marginVertical="5dp"
-                            android:contentDescription="@string/contentDes"
-                            android:src="@drawable/scan_svgrepo_com" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/scan"
-                            android:textStyle="bold" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/save_img"
-                        android:layout_width="0dp"
-                        android:gravity="center"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:layout_marginVertical="5dp"
-                            android:contentDescription="@string/contentDes"
-                            android:src="@drawable/save_svgrepo_com" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:text="@string/save"
-                            android:textStyle="bold" />
-
-                    </LinearLayout>
-                </LinearLayout>
-            </RelativeLayout>
         </LinearLayout>
     </ScrollView>
 
-</LinearLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginVertical="20dp"
+        android:layout_marginHorizontal="20dp"
+        android:tooltipText="SCAN QR"
+        android:contentDescription="@string/contentDes"
+        android:src="@drawable/scan_svgrepo_com_new"
+        android:id="@+id/floatActionBtn"
+        android:layout_above="@+id/bottomControls">
+
+    </com.google.android.material.floatingactionbutton.FloatingActionButton>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/bottomControls"
+        android:background="@drawable/bottom_background"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="0dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        tools:ignore="NotSibling">
+
+        <LinearLayout
+            android:id="@+id/share_qr"
+            android:layout_width="0dp"
+            android:gravity="center"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="10dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginVertical="5dp"
+                android:contentDescription="@string/contentDes"
+                android:src="@drawable/route_square_svgrepo_com" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:text="@string/share"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/settingApp"
+            android:layout_width="0dp"
+            android:gravity="center"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="10dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginVertical="5dp"
+                android:contentDescription="@string/contentDes"
+                android:src="@drawable/setting_svgrepo_com" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:text="@string/setting"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/save_img"
+            android:layout_width="0dp"
+            android:gravity="center"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="10dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginVertical="5dp"
+                android:contentDescription="@string/contentDes"
+                android:src="@drawable/gallery_import_svgrepo_com" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:text="@string/save"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

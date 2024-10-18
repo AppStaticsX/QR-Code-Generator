@@ -4,7 +4,11 @@ import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
@@ -26,9 +30,11 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.FileProvider;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
@@ -42,17 +48,18 @@ import java.io.OutputStream;
 public class MainActivity extends AppCompatActivity {
 
     private static final int QR_SIZE = 2048;
-    private static final int MAX_CHAR_COUNT = 2953;
+    private static final int MAX_CHAR_COUNT = 2950;
 
     private TextInputEditText inputData;
     private TextInputEditText qrName;
     private ImageView qrImage;
-    private ImageView scanAnim;
+    private TextView scanAnim;
     private MaterialButton generateBtn;
     private LinearLayout saveQr;
     private LinearLayout shareQr;
     private TextView letterCount;
-    private ImageButton uppercase, lowercase;
+    private ImageButton uppercase, lowercase, clearAllText;
+    private FloatingActionButton floatActionBtn;
 
     private PermissionManager permissionManager;
 
@@ -69,6 +76,8 @@ public class MainActivity extends AppCompatActivity {
         saveQr.setOnClickListener(view -> saveImageToStorage());
         shareQr.setOnClickListener(view -> shareQrCode());
 
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+
         inputData.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -78,12 +87,14 @@ public class MainActivity extends AppCompatActivity {
             @SuppressLint("SetTextI18n")
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                letterCount.setText(charSequence.length()+"/2953");
+                letterCount.setText(charSequence.length()+"/2950");
                 if (charSequence.length() > MAX_CHAR_COUNT) {
                     inputData.setText(charSequence.subSequence(0, MAX_CHAR_COUNT));
                     inputData.setSelection(MAX_CHAR_COUNT);
                     letterCount.setTextColor(Color.parseColor("#FF0000"));
                     showCustomToast("Text Limit Reached!", R.drawable.baseline_warning_amber_red__24);
+                } else {
+                    letterCount.setTextColor(Color.parseColor("#000000"));
                 }
             }
 
@@ -130,6 +141,23 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        clearAllText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Clear the text in EditText
+                inputData.setText("");
+            }
+        });
+
+        floatActionBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, ScannerActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            }
+        });
     }
 
     private void initializeViews() {
@@ -143,6 +171,8 @@ public class MainActivity extends AppCompatActivity {
         uppercase = findViewById(R.id.uppercase);
         lowercase = findViewById(R.id.lowercase);
         letterCount = findViewById(R.id.letterCount);
+        clearAllText = findViewById(R.id.clearAllText);
+        floatActionBtn = findViewById(R.id.floatActionBtn);
     }
 
     private void generateQrCode() {
@@ -160,7 +190,16 @@ public class MainActivity extends AppCompatActivity {
                 scanAnim.setVisibility(View.GONE);
                 BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
                 Bitmap bitmap = barcodeEncoder.encodeBitmap(text, BarcodeFormat.QR_CODE, QR_SIZE, QR_SIZE);
-                
+                Bitmap coloredBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+                Canvas canvas = new Canvas(coloredBitmap);
+                Paint paint = new Paint();
+
+                // Set the color you want for the QR code
+                paint.setColor(Color.BLUE); // Change this to your desired color
+                canvas.drawRect(0, 0, coloredBitmap.getWidth(), coloredBitmap.getHeight(), paint);
+                paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
+                canvas.drawBitmap(bitmap, 0, 0, paint);
+
                 qrImage.setVisibility(View.VISIBLE);
                 qrImage.setImageBitmap(bitmap);
             } catch (WriterException e) {
@@ -197,7 +236,7 @@ public class MainActivity extends AppCompatActivity {
     private void saveImageToMediaStore(Bitmap bitmap) throws Exception {
         String name = qrName.getText().toString();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(MediaStore.Images.Media.DISPLAY_NAME, "QRCode_" + name + ".jpg");
+        contentValues.put(MediaStore.Images.Media.DISPLAY_NAME, "QuickQR_" + name + ".jpg");
         contentValues.put(MediaStore.Images.Media.MIME_TYPE, "image/png");
         contentValues.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + "/QRImages");
 
@@ -205,7 +244,7 @@ public class MainActivity extends AppCompatActivity {
         if (imageUri != null) {
             try (OutputStream outputStream = getContentResolver().openOutputStream(imageUri)) {
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-                showCustomToast("QR Code saved successfully!", R.drawable.baseline_done_24);
+                showCustomToast("Saved Successfully!", R.drawable.baseline_done_24);
             }
         }
     }
@@ -220,7 +259,7 @@ public class MainActivity extends AppCompatActivity {
             directory.mkdirs();
         }
 
-        File file = new File(directory, "QRCode_" + name + ".jpg");
+        File file = new File(directory, "QuickQR_" + name + ".jpg");
         try (FileOutputStream outputStream = new FileOutputStream(file)) {
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
             outputStream.flush();

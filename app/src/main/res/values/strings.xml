@@ -10,5 +10,10 @@
     <string name="scan">SCAN</string>
     <string name="share">SHARE</string>
     <string name="save">SAVE</string>
-    <string name="letter_count">0/2953</string>
+    <string name="letter_count">0/2950</string>
+    <string name="qr_tolltip">YOUR GENERATED QR CODE WILL BE DISPLAY HERE.</string>
+    <string name="setting">SETTINGS</string>
+    <string name="scanned_results_text">SCANNED RESULTS WILL BE DISPLAY HERE</string>
+    <string name="scan_result_title">Scan Result:</string>
+    <string name="copy_content">COPY CONTENT</string>
 </resources>
