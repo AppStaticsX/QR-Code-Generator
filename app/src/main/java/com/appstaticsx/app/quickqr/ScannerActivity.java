@@ -4,46 +4,106 @@ import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.view.Window;
+import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.core.content.ContextCompat;
 
-import com.appstaticsx.app.quickqr.MainActivity;
-
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
-public class ScannerActivity extends AppCompatActivity {
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-    private TextView resultText;
-    private AppCompatButton copyContent;
+public class ScannerActivity extends BaseActivity {
+
+    private TextView resultText, urlTV;
+    private FloatingActionButton createQR, scanQRC, plusButton;
+    private Boolean isAllFabsVisible;
+    private LinearLayout urlsection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scanner);
 
+        Window window = getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.setStatusBarColor(ContextCompat.getColor(this, R.color.status_bar));
+
         resultText = findViewById(R.id.scannedResultTV);
-        copyContent = findViewById(R.id.copyContentBtn);
+        AppCompatButton copyContent = findViewById(R.id.copyContentBtn);
+        createQR = findViewById(R.id.createQR);
+        scanQRC = findViewById(R.id.scanQRC);
+        plusButton = findViewById(R.id.plusButton);
+        urlTV = findViewById(R.id.urlTV);
+        AppCompatButton browseUrl = findViewById(R.id.browseUrlButton);
+        urlsection = findViewById(R.id.urlSection);
+
+        isAllFabsVisible = false;
+
+        setupTextWatcher();
 
         Scancode();
 
-        copyContent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                copyTextToClipboard(resultText.getText().toString());
+        copyContent.setOnClickListener(v -> copyTextToClipboard(resultText.getText().toString()));
+
+        createQR.setOnClickListener(view -> {
+            Intent intent = new Intent(ScannerActivity.this, MainActivity.class);
+            startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            finish();
+        });
+
+        scanQRC.setOnClickListener(view -> {
+            Intent intent = new Intent(ScannerActivity.this, ScannerActivity.class);
+            startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            finish();
+        });
+
+        plusButton.setOnClickListener(view -> {
+            if (!isAllFabsVisible) {
+                createQR.setVisibility(View.VISIBLE);
+                scanQRC.setVisibility(View.VISIBLE);
+
+
+                plusButton.setImageResource(R.drawable.cross_svgrepo_com);
+
+                Animation showAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_show);
+                createQR.startAnimation(showAnimation);
+                scanQRC.startAnimation(showAnimation);
+
+                isAllFabsVisible = true;
+            } else {
+                createQR.setVisibility(View.GONE);
+                scanQRC.setVisibility(View.GONE);
+
+                plusButton.setImageResource(R.drawable.plus_large_svgrepo_com);
+
+                Animation hideAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_hide);
+                createQR.startAnimation(hideAnimation);
+                scanQRC.startAnimation(hideAnimation);
+
+                isAllFabsVisible = false;
             }
         });
+
+        browseUrl.setOnClickListener(v -> openBrowser());
     }
 
     private void Scancode() {
@@ -51,8 +111,17 @@ public class ScannerActivity extends AppCompatActivity {
         options.setPrompt("");
         options.setBeepEnabled(false);
         options.setOrientationLocked(true);
+        options.setCameraId(0);
         options.setCaptureActivity(CaptureActivityX.class);
         barLauncher.launch(options);
+    }
+
+    @SuppressLint("MissingSuperCall")
+    public void onBackPressed(){
+        Intent intent = new Intent(ScannerActivity.this, MainActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        finish();
     }
 
     @SuppressLint("SetTextI18n")
@@ -76,27 +145,62 @@ public class ScannerActivity extends AppCompatActivity {
 
         if (clipboard != null) {
             clipboard.setPrimaryClip(clip);
-            showCustomToast("CONTENT COPIED", R.drawable.baseline_done_24);
+            CustomToast customToast = new CustomToast(this);
+            customToast.show("CONTENT COPIED", R.drawable.tick_square_svgrepo_com);
         }
     }
 
-    private void showCustomToast(String message, int imageResId) {
-        LayoutInflater inflater = getLayoutInflater();
-        View layout = inflater.inflate(R.layout.toast_background,
-                (ViewGroup) findViewById(R.id.toast_layout_root));
+    @SuppressLint("SetTextI18n")
+    private void setupTextWatcher() {
+        resultText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // No action needed before text is changed
+            }
 
-        ImageView image = layout.findViewById(R.id.image);
-        image.setImageResource(imageResId);
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                recognizeUrlFromText(s.toString());
+            }
 
-        TextView text = layout.findViewById(R.id.text);
-        text.setGravity(Gravity.CENTER_VERTICAL);
-        text.setText(message);
-        text.setTextColor(getResources().getColor(R.color.black));
+            @Override
+            public void afterTextChanged(Editable s) {
+                // No action needed after text has been changed
+            }
+        });
+    }
 
-        Toast toast = new Toast(getApplicationContext());
-        toast.setDuration(Toast.LENGTH_SHORT);
-        toast.setView(layout);
-        toast.show();
+    private void recognizeUrlFromText(String text) {
+        extractUrl(text);
+        // Optionally handle the case when no URL is found
+    }
+
+    private String extractUrl(String text) {
+        String urlPattern = "(https?://\\S+|www\\.\\S+)";
+        Pattern pattern = Pattern.compile(urlPattern);
+        Matcher matcher = pattern.matcher(text);
+
+        if (matcher.find()) {
+            urlTV.setText(matcher.group(0));
+            urlsection.setVisibility(View.VISIBLE);// Update urlTV with the found URL
+            return matcher.group(0);
+        } else {
+            urlTV.setText(""); // Clear urlTV if no URL is found
+        }
+
+        return null;
+    }
+
+
+    private void openBrowser() {
+        try {
+            String text = resultText.getText().toString();
+            String url = extractUrl(text);
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            startActivity(intent);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
