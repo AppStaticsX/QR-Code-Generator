@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/background_color"
     android:gravity="center_horizontal"
     android:orientation="vertical"
     tools:context=".MainActivity">
@@ -13,14 +13,15 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="10dp"
         android:id="@+id/top_app_name"
         android:background="@drawable/header_background"
         android:gravity="center"
         android:orientation="horizontal">
 
         <ImageView
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_margin="5dp"
             android:contentDescription="@string/contentDes"
             android:src="@drawable/ic_launcher" />
@@ -30,7 +31,7 @@
             android:layout_height="wrap_content"
             android:text="@string/app_name"
             android:textAllCaps="true"
-            android:textSize="16sp"
+            android:textSize="24sp"
             android:textStyle="bold" />
     </LinearLayout>
 
@@ -43,9 +44,9 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/button_background"
+            android:background="@drawable/text_action_bar_background"
             android:layout_alignParentEnd="true"
-            android:layout_marginHorizontal="30dp"
+            android:layout_marginHorizontal="35dp"
             android:layout_marginBottom="5dp"
             android:layout_marginTop="25dp"
             android:gravity="center"
@@ -55,41 +56,44 @@
                 android:id="@+id/uppercase"
                 android:layout_width="0dp"
                 android:tooltipText="@string/upper"
-                android:layout_height="wrap_content"
+                android:layout_height="60dp"
                 android:layout_weight="1.5"
                 android:layout_marginHorizontal="1dp"
                 android:contentDescription="@string/contentDes"
                 android:padding="0dp"
                 android:src="@drawable/uppercase_icon"
+                android:backgroundTint="@color/btn_bg"
                 android:theme="@style/Base.Widget.AppCompat.Button.Borderless"
-                app:tint="@color/black"
+                app:tint="@color/drawable_tint"
                 tools:ignore="TouchTargetSizeCheck" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
+                android:textSize="30sp"
                 android:text="|"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
 
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/lowercase"
                 android:layout_width="0dp"
                 android:tooltipText="@string/lower"
                 android:layout_weight="1.5"
-                android:layout_height="wrap_content"
+                android:layout_height="60dp"
                 android:layout_marginHorizontal="1dp"
                 android:contentDescription="@string/contentDes"
                 android:padding="0dp"
+                android:backgroundTint="@color/btn_bg"
                 android:src="@drawable/lowercase_icon"
                 android:theme="@style/Base.Widget.AppCompat.Button.Borderless"
-                app:tint="@color/black"
+                app:tint="@color/drawable_tint"
                 tools:ignore="TouchTargetSizeCheck" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
+                android:textSize="30sp"
                 android:text="|"
                 android:textStyle="bold"/>
 
@@ -98,13 +102,13 @@
                 android:layout_width="0dp"
                 android:tooltipText="CLEAR TEXT"
                 android:layout_weight="1"
-                android:layout_height="wrap_content"
+                android:layout_height="60dp"
                 android:layout_marginHorizontal="1dp"
+                android:backgroundTint="@color/btn_bg"
                 android:contentDescription="@string/contentDes"
                 android:padding="0dp"
-                android:src="@drawable/keyboard_backspace_30dp"
+                android:src="@drawable/tag_cross_svgrepo_com_30"
                 android:theme="@style/Base.Widget.AppCompat.Button.Borderless"
-                app:tint="@color/black"
                 tools:ignore="TouchTargetSizeCheck" />
         </LinearLayout>
     </RelativeLayout>
@@ -127,22 +131,25 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/userText"
+                android:textColorHint="@color/al_exo_white_opacity_70"
+                android:theme="@style/textInputTheme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="30dp"
+                android:layout_marginHorizontal="35dp"
                 android:layout_marginTop="0dp"
-                android:background="@android:color/transparent">
+                android:background="@drawable/text_input_background">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/textData"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/textColor"
                     android:scrollbarFadeDuration="5000"
                     android:scrollbars="vertical"
                     android:gravity="top|start"
                     android:hint="@string/enter_your_text"
-                    android:maxLines="20"
-                    android:minLines="10"
+                    android:maxLines="16"
+                    android:minLines="16"
                     tools:ignore="VisualLintTextFieldSize" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -150,11 +157,12 @@
                 android:layout_width="match_parent"
                 android:paddingVertical="5dp"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="30dp">
+                android:layout_marginHorizontal="35dp">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
+                    android:textColor="@color/textColor"
                     android:text="@string/letter_count"
                     android:id="@+id/letterCount"/>
             </RelativeLayout>
@@ -163,18 +171,22 @@
                 android:id="@+id/qrCodename"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="30dp"
+                android:theme="@style/textInputTheme"
+                android:layout_marginHorizontal="35dp"
                 android:layout_marginTop="15dp"
-                android:background="@android:color/transparent"
+                android:background="@drawable/text_input_background"
+                android:textColorHint="@color/al_exo_white_opacity_70"
                 app:endIconMode="clear_text"
+                app:endIconTint="@color/quantum_orange400"
                 app:endIconDrawable="@drawable/close_circle_svgrepo_com"
                 app:startIconDrawable="@drawable/edit_2_svgrepo_com"
-                app:startIconTint="@color/my_light_primary">
+                app:startIconTint="@color/quantum_orange400">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/qrName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/textColor"
                     android:hint="@string/enter_name_optional"
                     android:maxLines="1"
                     tools:ignore="VisualLintTextFieldSize" />
@@ -185,53 +197,67 @@
                 android:layout_width="match_parent"
                 android:tooltipText="GENERATE QR CODE"
                 android:layout_height="60dp"
-                android:layout_marginHorizontal="30dp"
+                android:layout_marginHorizontal="35dp"
                 android:layout_marginTop="25dp"
                 android:layout_marginBottom="15dp"
                 android:text="@string/generate_qrcode"
                 android:textSize="18sp"
                 android:textStyle="bold"
+                android:textColor="@color/drawable_tint"
                 app:cornerRadius="8dp"
                 tools:ignore="VisualLintButtonSize" />
 
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="30dp"
-                android:layout_marginVertical="15dp"
-                app:cardElevation="1dp"
-                app:cardBackgroundColor="@color/white">
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/qrCardView"
+                    android:layout_marginHorizontal="35dp"
+                    android:visibility="gone"
+                    android:layout_marginBottom="30dp"
+                    app:strokeWidth="0dp"
+                    app:strokeColor="@color/background_color"
+                    app:cardElevation="1dp"
+                    app:cardBackgroundColor="@color/card_background_color">
 
-                <ImageView
-                    android:id="@+id/qrImage"
-                    android:layout_width="300dp"
-                    android:layout_height="300dp"
-                    android:layout_gravity="center"
-                    android:contentDescription="@string/contentDes"
-                    android:visibility="gone" />
+                    <ImageView
+                        android:id="@+id/qrImage"
+                        android:layout_width="300dp"
+                        android:layout_height="300dp"
+                        android:padding="20dp"
+                        android:layout_gravity="center"
+                        android:contentDescription="@string/contentDes"
+                        android:visibility="gone" />
 
-                <TextView
-                    android:id="@+id/qr_code_anim1"
-                    android:layout_width="200dp"
-                    android:layout_height="150dp"
-                    android:gravity="center"
-                    android:layout_gravity="center"
-                    android:lineHeight="20dp"
-                    android:text="@string/qr_tolltip"
-                    android:visibility="visible" />
-            </com.google.android.material.card.MaterialCardView>
+                    <TextView
+                        android:id="@+id/qr_code_anim1"
+                        android:layout_width="200dp"
+                        android:layout_height="150dp"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:lineHeight="20dp"
+                        android:text="@string/qr_tolltip"
+                        android:visibility="visible" />
+                </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
     </ScrollView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_marginVertical="20dp"
+        android:layout_centerInParent="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="42dp"
+        android:layout_marginTop="40dp"
         android:layout_marginHorizontal="20dp"
+        app:backgroundTint="@color/quantum_orange400"
         android:tooltipText="SCAN QR"
+        app:fabCradleRoundedCornerRadius="50dp"
+        app:fabCradleMargin="10dp"
+        app:showMotionSpec="@android:anim/accelerate_decelerate_interpolator"
+        android:outlineSpotShadowColor="@color/quantum_orange400"
         android:contentDescription="@string/contentDes"
-        android:src="@drawable/scan_svgrepo_com_new"
+        android:src="@drawable/scan_svgrepo_new_img"
+        app:tint="@null"
         android:id="@+id/floatActionBtn"
         android:layout_above="@+id/bottomControls">
 
@@ -252,7 +278,7 @@
             android:id="@+id/share_qr"
             android:layout_width="0dp"
             android:gravity="center"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -277,7 +303,7 @@
             android:id="@+id/settingApp"
             android:layout_width="0dp"
             android:gravity="center"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -299,10 +325,60 @@
         </LinearLayout>
 
         <LinearLayout
+            android:layout_width="0dp"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.65"
+            android:visibility="invisible"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginVertical="5dp"
+                android:contentDescription="@string/contentDes"
+                android:src="@drawable/setting_svgrepo_com" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:text="@string/setting"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/view_img"
+            android:layout_width="0dp"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginVertical="5dp"
+                android:contentDescription="@string/contentDes"
+                android:src="@drawable/archive_book_svgrepo_com" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:text="@string/history"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/save_img"
             android:layout_width="0dp"
             android:gravity="center"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

@@ -15,6 +15,6 @@
         android:textStyle="bold"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:textColor="#49454F"/>
+        android:textColor="@color/white"/>
 
 </LinearLayout>

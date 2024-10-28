@@ -16,4 +16,12 @@
     <string name="scanned_results_text">SCANNED RESULTS WILL BE DISPLAY HERE</string>
     <string name="scan_result_title">Scan Result:</string>
     <string name="copy_content">COPY CONTENT</string>
+    <string name="view">VIEW</string>
+    <string name="history">HISTORY</string>
+    <string name="url_detected">URL DETECTED:</string>
+    <string name="url_content">URL Content: </string>
+    <string name="browse">BROWSE</string>
+    <string name="settings_title">SETTINGS</string>
+    <string name="appearence">Appearence</string>
+    <string name="change_theme_color_des">Change application theme color</string>
 </resources>

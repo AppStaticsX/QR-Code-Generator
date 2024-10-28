@@ -2,10 +2,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <style name="CustomAlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="android:windowBackground">@drawable/dialog_background</item>
-        <item name="android:textColorPrimary">#000000</item>
-        <item name="android:textColorSecondary">#000000</item>
+        <item name="android:textColor">@color/default_text_color</item>
+        <item name="android:textColorPrimary">@color/default_text_color</item>
+        <item name="android:textColorSecondary">@color/default_text_color</item>
     </style>
-
-
 
     </resources>
