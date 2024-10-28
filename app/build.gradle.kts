@@ -9,9 +9,10 @@ android {
     defaultConfig {
         applicationId = "com.appstaticsx.app.quickqr"
         minSdk = 26
+        //noinspection OldTargetApi
         targetSdk = 34
         versionCode = 1
-        versionName = "1.0"
+        versionName = "1.0-Alpha"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -43,4 +44,5 @@ dependencies {
     implementation("com.google.zxing:core:3.4.1")
     implementation("com.journeyapps:zxing-android-embedded:4.3.0")
     implementation("com.airbnb.android:lottie:5.2.0")
+    implementation("com.mikhaellopez:circularimageview:4.3.1")
 }
